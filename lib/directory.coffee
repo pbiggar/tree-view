@@ -163,6 +163,9 @@ class Directory
   isPathEqual: (pathToCompare) ->
     @path is pathToCompare or @realPath is pathToCompare
 
+  isModified: () ->
+    not (@statuses.length is 1 and @statuses[0] is "unmodified")
+
   # Public: Does this directory contain the given path?
   #
   # See atom.Directory::contains for more details.
@@ -210,6 +213,8 @@ class Directory
           when 'delete' then @destroy()
 
   getEntries: ->
+    hideUnmodified = atom.config.get("tree-view.hideVcsUnmodifiedFiles")
+
     try
       names = fs.readdirSync(@path)
     catch error
@@ -234,14 +239,18 @@ class Directory
           directories.push(name)
         else
           expansionState = @expansionState.entries[name]
-          directories.push(new Directory({name, fullPath, symlink, expansionState, @ignoredPatterns, @useSyncFS}))
+          dir = new Directory({name, fullPath, symlink, expansionState, @ignoredPatterns, @useSyncFS})
+          unless hideUnmodified and not dir.isModified()
+            directories.push(dir)
       else if stat.isFile?()
         if @entries.hasOwnProperty(name)
           # push a placeholder since this entry already exists but this helps
           # track the insertion index for the created views
           files.push(name)
         else
-          files.push(new File({name, fullPath, symlink, realpathCache, @useSyncFS}))
+          file = new File({name, fullPath, symlink, realpathCache, @useSyncFS})
+          unless hideUnmodified and not file.isModified()
+            files.push(file)
 
     @sortEntries(directories.concat(files))
 

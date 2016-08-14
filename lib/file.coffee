@@ -107,5 +107,8 @@ class File
       @statuses = newStatuses
       @emitter.emit('did-status-change', newStatuses)
 
+  isModified: () ->
+    not (@statuses.length is 1 and @statuses[0] is "unmodified")
+
   isPathEqual: (pathToCompare) ->
     @path is pathToCompare or @realPath is pathToCompare

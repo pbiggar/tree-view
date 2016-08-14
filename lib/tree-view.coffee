@@ -131,6 +131,7 @@ class TreeView extends View
      'tool-panel:unfocus': => @unfocus()
      'tree-view:toggle-vcs-ignored-files': -> toggleConfig 'tree-view.hideVcsIgnoredFiles'
      'tree-view:toggle-ignored-names': -> toggleConfig 'tree-view.hideIgnoredNames'
+     'tree-view:toggle-vcs-unmodified-files': -> toggleConfig 'tree-view.hideVcsUnmodifiedFiles'
      'tree-view:remove-project-folder': (e) => @removeProjectFolder(e)
 
     [0..8].forEach (index) =>
@@ -146,6 +147,9 @@ class TreeView extends View
       @updateRoots()
     @disposables.add atom.config.onDidChange 'tree-view.hideIgnoredNames', =>
       @updateRoots()
+    @disposables.add atom.config.onDidChange 'tree-view.hideVcsUnmodifiedFiles', =>
+      @updateRoots()
+
     @disposables.add atom.config.onDidChange 'core.ignoredNames', =>
       @updateRoots() if atom.config.get('tree-view.hideIgnoredNames')
     @disposables.add atom.config.onDidChange 'tree-view.showOnRightSide', ({newValue}) =>

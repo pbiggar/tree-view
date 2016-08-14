@@ -51,6 +51,13 @@
       "default": false,
       "description": "Show the tree view on the right side of the editor instead of the left."
     },
+    "hideVcsUnmodifiedFiles": {
+      "type": "boolean",
+      "default": false,
+      "title": "Hide VCS Unmodified Files",
+      "description": "Don't show files and directories that are unmodified in the project's VCS system."
+    },
+
     "sortFoldersBeforeFiles": {
       "type": "boolean",
       "default": true,
